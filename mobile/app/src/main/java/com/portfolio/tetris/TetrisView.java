@@ -173,7 +173,7 @@ public class TetrisView extends View {
         paint.setAlpha(255);
     }
 
-    private void drawGrid(Canvas canvas) { //
+    private void drawGrid(Canvas canvas) {
         paint.setStyle(Paint.Style.STROKE);
         paint.setColor(Color.parseColor("#2A2A4A"));
         paint.setStrokeWidth(0.5f);
