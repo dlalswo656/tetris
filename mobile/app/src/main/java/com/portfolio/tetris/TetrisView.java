@@ -192,58 +192,83 @@ public class TetrisView extends View {
 
     private void drawSidePanel(Canvas canvas) {
         float panelX = offsetX + TetrisBoard.COLS * cellSize + 16;
+        float mini = cellSize * 0.6f;
         paint.setStyle(Paint.Style.FILL);
         paint.setTextAlign(Paint.Align.LEFT);
 
-        // SCORE
+        // ── HOLD ──
         paint.setTextSize(cellSize * 0.5f);
         paint.setColor(Color.parseColor("#A0A0C0"));
-        canvas.drawText("SCORE", panelX, offsetY + cellSize * 1.2f, paint);
+        canvas.drawText("HOLD", panelX, offsetY + cellSize * 1.0f, paint);
+
+        // 홀드 박스 배경
+        paint.setColor(Color.parseColor("#2A2A4A"));
+        canvas.drawRoundRect(new RectF(panelX - 4, offsetY + cellSize * 1.1f,
+                panelX + mini * 4 + 4, offsetY + cellSize * 1.1f + mini * 4 + 4), 6, 6, paint);
+
+        TetrisBlock held = board.getHeldBlock();
+        if (held != null) {
+            int[][] hShape = held.getShape();
+            paint.setAlpha(board.canHold() ? 255 : 100);
+            for (int r = 0; r < 4; r++)
+                for (int c = 0; c < 4; c++)
+                    if (hShape[r][c] == 1) {
+                        float l = panelX + c * mini;
+                        float t = offsetY + cellSize * 1.2f + r * mini;
+                        paint.setColor(held.getColor());
+                        paint.setStyle(Paint.Style.FILL);
+                        canvas.drawRoundRect(new RectF(l + 1, t + 1, l + mini - 1, t + mini - 1), 4, 4, paint);
+                    }
+            paint.setAlpha(255);
+        }
+
+        // ── SCORE ──
+        paint.setTextSize(cellSize * 0.5f);
+        paint.setColor(Color.parseColor("#A0A0C0"));
+        canvas.drawText("SCORE", panelX, offsetY + cellSize * 5.0f, paint);
         paint.setColor(Color.WHITE);
         paint.setTextSize(cellSize * 0.65f);
-        canvas.drawText(String.valueOf(board.getScore()), panelX, offsetY + cellSize * 2.1f, paint);
+        canvas.drawText(String.valueOf(board.getScore()), panelX, offsetY + cellSize * 5.9f, paint);
 
-        // LEVEL
+        // ── LEVEL ──
         paint.setTextSize(cellSize * 0.5f);
         paint.setColor(Color.parseColor("#A0A0C0"));
-        canvas.drawText("LEVEL", panelX, offsetY + cellSize * 3.3f, paint);
+        canvas.drawText("LEVEL", panelX, offsetY + cellSize * 7.1f, paint);
         paint.setColor(Color.parseColor("#FFD700"));
         paint.setTextSize(cellSize * 0.65f);
-        canvas.drawText(String.valueOf(board.getLevel()), panelX, offsetY + cellSize * 4.2f, paint);
+        canvas.drawText(String.valueOf(board.getLevel()), panelX, offsetY + cellSize * 8.0f, paint);
 
-        // LINES
+        // ── LINES ──
         paint.setTextSize(cellSize * 0.5f);
         paint.setColor(Color.parseColor("#A0A0C0"));
-        canvas.drawText("LINES", panelX, offsetY + cellSize * 5.4f, paint);
+        canvas.drawText("LINES", panelX, offsetY + cellSize * 9.2f, paint);
         paint.setColor(Color.parseColor("#7DD87A"));
         paint.setTextSize(cellSize * 0.65f);
-        canvas.drawText(String.valueOf(board.getLinesCleared()), panelX, offsetY + cellSize * 6.3f, paint);
+        canvas.drawText(String.valueOf(board.getLinesCleared()), panelX, offsetY + cellSize * 10.1f, paint);
 
-        // NEXT
+        // ── NEXT ──
         paint.setTextSize(cellSize * 0.5f);
         paint.setColor(Color.parseColor("#A0A0C0"));
-        canvas.drawText("NEXT", panelX, offsetY + cellSize * 7.8f, paint);
-
+        canvas.drawText("NEXT", panelX, offsetY + cellSize * 11.5f, paint);
         TetrisBlock next = board.getNextBlock();
         int[][] shape = next.getShape();
-        float mini = cellSize * 0.6f;
         for (int r = 0; r < 4; r++)
             for (int c = 0; c < 4; c++)
                 if (shape[r][c] == 1) {
                     float l = panelX + c * mini;
-                    float t = offsetY + cellSize * 8.4f + r * mini;
+                    float t = offsetY + cellSize * 11.9f + r * mini;
                     paint.setColor(next.getColor());
                     paint.setStyle(Paint.Style.FILL);
                     canvas.drawRoundRect(new RectF(l + 1, t + 1, l + mini - 1, t + mini - 1), 4, 4, paint);
                 }
 
-        // 조작 안내 (하단)
-        paint.setTextSize(cellSize * 0.38f);
+        // ── 조작 안내 ──
+        paint.setTextSize(cellSize * 0.35f);
         paint.setColor(Color.parseColor("#606080"));
-        canvas.drawText("← →  이동", panelX, offsetY + cellSize * 15f, paint);
-        canvas.drawText("↑  회전", panelX, offsetY + cellSize * 15.8f, paint);
-        canvas.drawText("↓  소프트드롭", panelX, offsetY + cellSize * 16.6f, paint);
-        canvas.drawText("SPACE 하드드롭", panelX, offsetY + cellSize * 17.4f, paint);
+        canvas.drawText("Tap: Rotate", panelX, offsetY + cellSize * 16.2f, paint);
+        canvas.drawText("Swipe L/R: Move", panelX, offsetY + cellSize * 16.9f, paint);
+        canvas.drawText("Swipe Down: Drop", panelX, offsetY + cellSize * 17.6f, paint);
+        canvas.drawText("Swipe Up: Hold", panelX, offsetY + cellSize * 18.3f, paint);
     }
 
     private void drawGameOver(Canvas canvas) {
@@ -298,11 +323,12 @@ public class TetrisView extends View {
                     // 탭 → 회전
                     board.rotate();
                 } else if (Math.abs(dx) > Math.abs(dy)) {
+                    // 좌우 스와이프 → 이동
                     if (dx > SWIPE_THRESHOLD) board.moveRight();
                     else if (dx < -SWIPE_THRESHOLD) board.moveLeft();
                 } else {
-                    if (dy > SWIPE_THRESHOLD) board.hardDrop();
-                    else if (dy < -SWIPE_THRESHOLD) board.rotate();
+                    if (dy > SWIPE_THRESHOLD) board.hardDrop();       // 아래 스와이프 → 하드드롭
+                    else if (dy < -SWIPE_THRESHOLD) board.holdBlock(); // 위 스와이프 → 홀드
                 }
                 invalidate();
                 break;

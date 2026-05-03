@@ -5,9 +5,11 @@ public class TetrisBoard {
     public static final int COLS = 10;
     public static final int ROWS = 20;
 
-    private int[][] board = new int[ROWS][COLS]; // 0 = 빈칸, 색상값 = 블록
+    private int[][] board = new int[ROWS][COLS];
     private TetrisBlock currentBlock;
     private TetrisBlock nextBlock;
+    private TetrisBlock heldBlock = null;  // 홀드 블록
+    private boolean canHold = true;        // 블록 고정 전까지 1회만 홀드 가능
 
     private int score = 0;
     private int level = 1;
@@ -98,6 +100,23 @@ public class TetrisBoard {
         }
     }
 
+    // 홀드 기능 (위로 스와이프)
+    public void holdBlock() {
+        if (gameOver || paused || !canHold) return;
+        if (heldBlock == null) {
+            heldBlock = new TetrisBlock(currentBlock.type);
+            spawnBlock();
+        } else {
+            int heldType = heldBlock.type;
+            heldBlock = new TetrisBlock(currentBlock.type);
+            currentBlock = new TetrisBlock(heldType);
+            currentBlock.x = 3;
+            currentBlock.y = 0;
+            if (!isValidPosition(currentBlock, 0, 0)) gameOver = true;
+        }
+        canHold = false;
+    }
+
     // 블록 고정
     private void lockBlock() {
         int[][] shape = currentBlock.getShape();
@@ -113,6 +132,7 @@ public class TetrisBoard {
             }
         }
         clearLines();
+        canHold = true;
         spawnBlock();
     }
 
@@ -177,6 +197,7 @@ public class TetrisBoard {
     public void restart() {
         board = new int[ROWS][COLS];
         score = 0; level = 1; linesCleared = 0; gameOver = false; paused = false;
+        heldBlock = null; canHold = true;
         nextBlock = new TetrisBlock(TetrisBlock.randomType());
         spawnBlock();
     }
@@ -185,6 +206,8 @@ public class TetrisBoard {
     public int[][] getBoard() { return board; }
     public TetrisBlock getCurrentBlock() { return currentBlock; }
     public TetrisBlock getNextBlock() { return nextBlock; }
+    public TetrisBlock getHeldBlock() { return heldBlock; }
+    public boolean canHold() { return canHold; }
     public int getScore() { return score; }
     public int getLevel() { return level; }
     public int getLinesCleared() { return linesCleared; }
