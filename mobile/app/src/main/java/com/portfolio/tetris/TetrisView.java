@@ -201,11 +201,6 @@ public class TetrisView extends View {
         paint.setColor(Color.parseColor("#A0A0C0"));
         canvas.drawText("HOLD", panelX, offsetY + cellSize * 1.0f, paint);
 
-        // 홀드 박스 배경
-        paint.setColor(Color.parseColor("#2A2A4A"));
-        canvas.drawRoundRect(new RectF(panelX - 4, offsetY + cellSize * 1.1f,
-                panelX + mini * 4 + 4, offsetY + cellSize * 1.1f + mini * 4 + 4), 6, 6, paint);
-
         TetrisBlock held = board.getHeldBlock();
         if (held != null) {
             int[][] hShape = held.getShape();
