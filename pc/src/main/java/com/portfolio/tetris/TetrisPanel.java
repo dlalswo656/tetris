@@ -18,6 +18,9 @@ public class TetrisPanel extends JPanel implements KeyListener, ActionListener {
 
     private final TetrisBoard board;
     private Timer timer;
+    private JButton pauseButton; // 외부 버튼 참조 (P키로 상태 동기화)
+
+    public void setPauseButton(JButton btn) { this.pauseButton = btn; }
 
     public TetrisPanel() {
         board = new TetrisBoard();
@@ -28,7 +31,9 @@ public class TetrisPanel extends JPanel implements KeyListener, ActionListener {
         startTimer();
     }
 
-    private void startTimer() {
+    public TetrisBoard getBoard() { return board; }
+
+    public void startTimer() {
         if (timer != null) timer.stop();
         timer = new Timer(board.getSpeed(), this);
         timer.start();
@@ -232,8 +237,16 @@ public class TetrisPanel extends JPanel implements KeyListener, ActionListener {
             case KeyEvent.VK_DOWN:  board.moveDown();   break;
             case KeyEvent.VK_SPACE: board.hardDrop();   break;
             case KeyEvent.VK_C:     board.holdBlock();  break; // 홀드
-            case KeyEvent.VK_P:     board.togglePause(); break;
-            case KeyEvent.VK_R:     board.restart(); startTimer(); break;
+            case KeyEvent.VK_P:
+                board.togglePause();
+                if (pauseButton != null)
+                    pauseButton.setText(board.isPaused() ? "Resume  [P]" : "Pause  [P]");
+                if (!board.isPaused()) startTimer();
+                break;
+            case KeyEvent.VK_R:
+                board.restart(); startTimer();
+                if (pauseButton != null) pauseButton.setText("Pause  [P]");
+                break;
         }
         repaint();
     }
