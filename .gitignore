@@ -1,0 +1,19 @@
+# Android
+mobile/.gradle/
+mobile/build/
+mobile/app/build/
+mobile/local.properties
+mobile/*.iml
+mobile/.idea/
+
+# PC Maven
+pc/target/
+
+# Java
+*.class
+*.jar
+!pc/target/tetris-pc.jar
+
+# OS
+.DS_Store
+Thumbs.db
