@@ -109,7 +109,7 @@ public class MultiplayerActivity extends AppCompatActivity {
         });
 
         new Thread(() -> {
-            // 서버 정리 시간 확보 후 연결 (최대 3회 재시도)
+            // 서버 정리 시간 확보 후 연결 (최대 3회 재시도) ing
             boolean ok = false;
             for (int i = 0; i < 3; i++) {
                 try { Thread.sleep(i == 0 ? 500 : 1500); } catch (InterruptedException ignored) {}
