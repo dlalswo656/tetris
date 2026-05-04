@@ -148,8 +148,12 @@ public class Main {
                         System.out.println("[서버] 플레이어 2 대기...");
                         java.net.Socket p2 = serverSocket.accept();
                         System.out.println("[서버] P2 접속 - 게임 시작!");
+                        // 양쪽 클라이언트 읽기 스레드가 준비될 때까지 대기
+                        Thread.sleep(300);
                         sendTo(p1, "START:1");
+                        Thread.sleep(50);
                         sendTo(p2, "START:2");
+                        System.out.println("[서버] START 전송 완료");
                         new Thread(() -> relayLoop(p1, p2)).start();
                         new Thread(() -> relayLoop(p2, p1)).start();
                     } catch (Exception e) {
@@ -266,7 +270,10 @@ public class Main {
 
     private static void sendTo(java.net.Socket socket, String msg) {
         try {
-            new java.io.PrintWriter(socket.getOutputStream(), true).println(msg);
+            // BufferedWriter 중간 버퍼 없이 직접 전송 (데이터 유실 방지)
+            byte[] data = (msg + "\n").getBytes("UTF-8");
+            socket.getOutputStream().write(data);
+            socket.getOutputStream().flush();
         } catch (Exception ignored) {}
     }
 
