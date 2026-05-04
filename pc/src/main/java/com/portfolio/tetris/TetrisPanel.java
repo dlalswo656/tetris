@@ -147,7 +147,7 @@ public class TetrisPanel extends JPanel implements KeyListener, ActionListener {
             drawMiniBlock(g, held, px + 4, 36);
             g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
         } else {
-            g.setFont(new Font("Arial", Font.PLAIN, 11));
+            g.setFont(new Font("Malgun Gothic", Font.PLAIN, 11));
             g.setColor(new Color(0x505070));
             g.drawString("None", px + 6, 58);
         }
@@ -163,7 +163,7 @@ public class TetrisPanel extends JPanel implements KeyListener, ActionListener {
         drawStatRow(g, px, sy + 140, "LINES", String.valueOf(board.getLinesCleared()), new Color(0x7DD87A));
 
         // ── 키 가이드 ──────────────────────────
-        g.setFont(new Font("Arial", Font.PLAIN, 11));
+        g.setFont(new Font("Malgun Gothic", Font.PLAIN, 11));
         g.setColor(new Color(0x505070));
         int ky = BOARD_H - 125;
         String[] keys = {
@@ -184,16 +184,16 @@ public class TetrisPanel extends JPanel implements KeyListener, ActionListener {
         g.setColor(BORDER);
         g.setStroke(new BasicStroke(1f));
         g.drawRoundRect(x - 4, y, SIDE_W - 16, 90, 8, 8);
-        g.setFont(new Font("Arial", Font.BOLD, 12));
+        g.setFont(new Font("Malgun Gothic", Font.BOLD, 12));
         g.setColor(LABEL_COLOR);
         g.drawString(title, x, y + 16);
     }
 
     private void drawStatRow(Graphics2D g, int x, int y, String label, String value, Color valueColor) {
-        g.setFont(new Font("Arial", Font.PLAIN, 12));
+        g.setFont(new Font("Malgun Gothic", Font.PLAIN, 12));
         g.setColor(LABEL_COLOR);
         g.drawString(label, x, y);
-        g.setFont(new Font("Arial", Font.BOLD, 22));
+        g.setFont(new Font("Malgun Gothic", Font.BOLD, 22));
         g.setColor(valueColor);
         g.drawString(value, x, y + 26);
     }
@@ -202,20 +202,20 @@ public class TetrisPanel extends JPanel implements KeyListener, ActionListener {
         g.setColor(new Color(0,0,0,180));
         g.fillRect(0, 0, BOARD_W, BOARD_H);
 
-        g.setFont(new Font("Arial", Font.BOLD, 28));
+        g.setFont(new Font("Malgun Gothic", Font.BOLD, 28));
         g.setColor(Color.WHITE);
         FontMetrics fm = g.getFontMetrics();
         g.drawString(title, (BOARD_W - fm.stringWidth(title))/2, BOARD_H/2 - 20);
 
         if (board.isGameOver()) {
             String score = "SCORE: " + board.getScore();
-            g.setFont(new Font("Arial", Font.BOLD, 16));
+            g.setFont(new Font("Malgun Gothic", Font.BOLD, 16));
             g.setColor(new Color(0xFFD700));
             fm = g.getFontMetrics();
             g.drawString(score, (BOARD_W - fm.stringWidth(score))/2, BOARD_H/2 + 12);
         }
 
-        g.setFont(new Font("Arial", Font.PLAIN, 13));
+        g.setFont(new Font("Malgun Gothic", Font.PLAIN, 13));
         g.setColor(new Color(0xA0A0C0));
         fm = g.getFontMetrics();
         g.drawString(sub, (BOARD_W - fm.stringWidth(sub))/2, BOARD_H/2 + 40);

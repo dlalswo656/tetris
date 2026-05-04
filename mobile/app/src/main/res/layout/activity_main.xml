@@ -35,9 +35,20 @@
             android:layout_height="48dp"
             android:layout_weight="1"
             android:layout_margin="8dp"
-            android:text="🔄 다시시작"
+            android:text="다시시작"
             android:textSize="14sp"
             android:backgroundTint="#8A4A4A"
+            android:textColor="#FFFFFF"/>
+
+        <Button
+            android:id="@+id/btnMultiplayer"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:layout_margin="8dp"
+            android:text="2P 대전"
+            android:textSize="14sp"
+            android:backgroundTint="#4A8A4A"
             android:textColor="#FFFFFF"/>
 
     </LinearLayout>

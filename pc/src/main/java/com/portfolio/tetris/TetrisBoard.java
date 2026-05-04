@@ -12,6 +12,9 @@ public class TetrisBoard {
     private int score = 0, level = 1, linesCleared = 0;
     private boolean gameOver = false, paused = false;
     private static final int[] SCORE_TABLE = {0, 100, 300, 500, 800};
+    // 네트워크 대전 - 공격 라인 (줄 클리어 시 상대에게 보낼 줄 수)
+    private int pendingAttack = 0;
+    private static final int[] ATTACK_TABLE = {0, 0, 1, 2, 4}; // 1줄→0, 2줄→1, 3줄→2, 4줄→4
 
     public TetrisBoard() {
         nextBlock = new TetrisBlock(TetrisBlock.randomType());
@@ -105,6 +108,7 @@ public class TetrisBoard {
             score += SCORE_TABLE[Math.min(cleared, 4)] * level;
             linesCleared += cleared;
             level = linesCleared / 10 + 1;
+            pendingAttack += ATTACK_TABLE[Math.min(cleared, 4)];
         }
     }
 
@@ -134,6 +138,42 @@ public class TetrisBoard {
                     if (ny >= 0 && board[ny][nx] != null) return false;
                 }
         return true;
+    }
+
+    // 가비지 라인 추가 (상대방 공격 받을 때)
+    public void addGarbageLines(int count) {
+        int hole = (int)(Math.random() * COLS);
+        Color garbageColor = new Color(0x555555);
+        for (int i = 0; i < count; i++) {
+            // 위로 한 줄 밀기
+            for (int r = 0; r < ROWS - 1; r++) board[r] = board[r + 1].clone();
+            // 맨 아래에 가비지 라인 추가 (구멍 1칸)
+            board[ROWS - 1] = new Color[COLS];
+            for (int c = 0; c < COLS; c++)
+                if (c != hole) board[ROWS - 1][c] = garbageColor;
+        }
+    }
+
+    // 공격 라인 가져오기 (네트워크 전송 후 초기화)
+    public int getAndResetAttack() {
+        int atk = pendingAttack;
+        pendingAttack = 0;
+        return atk;
+    }
+
+    // 보드를 컴팩트 문자열로 직렬화 (네트워크 전송용)
+    public String serializeBoard() {
+        StringBuilder sb = new StringBuilder();
+        for (int r = 0; r < ROWS; r++)
+            for (int c = 0; c < COLS; c++)
+                sb.append(board[r][c] == null ? "0" : colorToIndex(board[r][c]));
+        return sb.toString();
+    }
+
+    private int colorToIndex(Color color) {
+        for (int i = 0; i < TetrisBlock.COLORS.length; i++)
+            if (TetrisBlock.COLORS[i].equals(color)) return i + 1;
+        return 8; // 가비지
     }
 
     public int getSpeed() { return Math.max(100, 800 - (level - 1) * 70); }

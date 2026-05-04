@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#1A1A2E">
+
+    <!-- 상태 바 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:background="#16213E"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingHorizontal="16dp">
+
+        <TextView
+            android:id="@+id/tvMyScore"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="ME: 0"
+            android:textColor="#7DD87A"
+            android:textSize="12sp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/tvStatus"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:gravity="center"
+            android:text="연결 중..."
+            android:textColor="#A0A0C0"
+            android:textSize="11sp"/>
+
+        <TextView
+            android:id="@+id/tvOpScore"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="end"
+            android:text="OP: 0"
+            android:textColor="#FF6B6B"
+            android:textSize="12sp"
+            android:textStyle="bold"/>
+    </LinearLayout>
+
+    <!-- 두 게임 보드 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <com.portfolio.tetris.TetrisView
+            android:id="@+id/myTetrisView"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+
+        <View
+            android:layout_width="2dp"
+            android:layout_height="match_parent"
+            android:background="#3A3A6A"/>
+
+        <com.portfolio.tetris.OpponentView
+            android:id="@+id/opponentView"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+    </LinearLayout>
+
+    <!-- 하단 컨트롤: 좌/우 이동 + 게임 조작 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:background="#16213E"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="6dp">
+
+        <!-- 왼쪽 이동 -->
+        <Button
+            android:id="@+id/btnLeft"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:layout_margin="3dp"
+            android:text="◀"
+            android:textSize="16sp"
+            android:backgroundTint="#2A2A5A"
+            android:textColor="#FFFFFF"/>
+
+        <!-- 회전 -->
+        <Button
+            android:id="@+id/btnRotate"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:layout_margin="3dp"
+            android:text="↺"
+            android:textSize="16sp"
+            android:backgroundTint="#4A8A4A"
+            android:textColor="#FFFFFF"/>
+
+        <!-- 홀드 -->
+        <Button
+            android:id="@+id/btnHold"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:layout_margin="3dp"
+            android:text="HOLD"
+            android:textSize="11sp"
+            android:backgroundTint="#4A4A8A"
+            android:textColor="#FFFFFF"/>
+
+        <!-- 하드드롭 -->
+        <Button
+            android:id="@+id/btnDrop"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:layout_margin="3dp"
+            android:text="▼▼"
+            android:textSize="14sp"
+            android:backgroundTint="#8A4A4A"
+            android:textColor="#FFFFFF"/>
+
+        <!-- 오른쪽 이동 -->
+        <Button
+            android:id="@+id/btnRight"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:layout_margin="3dp"
+            android:text="▶"
+            android:textSize="16sp"
+            android:backgroundTint="#2A2A5A"
+            android:textColor="#FFFFFF"/>
+
+    </LinearLayout>
+
+</LinearLayout>

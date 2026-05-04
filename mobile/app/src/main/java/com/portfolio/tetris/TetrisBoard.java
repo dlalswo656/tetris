@@ -17,6 +17,10 @@ public class TetrisBoard {
     private boolean gameOver = false;
     private boolean paused = false;
 
+    // 네트워크 대전 - 공격 라인
+    private int pendingAttack = 0;
+    private static final int[] ATTACK_TABLE = {0, 0, 1, 2, 4};
+
     // 점수 계산표
     private static final int[] SCORE_TABLE = {0, 100, 300, 500, 800};
 
@@ -147,9 +151,10 @@ public class TetrisBoard {
             }
         }
         if (cleared > 0) {
-            score += SCORE_TABLE[cleared] * level;
+            score += SCORE_TABLE[Math.min(cleared,4)] * level;
             linesCleared += cleared;
             level = linesCleared / 10 + 1;
+            pendingAttack += ATTACK_TABLE[Math.min(cleared, 4)];
         }
     }
 
@@ -188,6 +193,40 @@ public class TetrisBoard {
         return true;
     }
 
+    // 가비지 라인 추가 (상대 공격)
+    public void addGarbageLines(int count) {
+        int hole = (int)(Math.random() * COLS);
+        int garbageColor = 0xFF555555;
+        for (int i = 0; i < count; i++) {
+            for (int r = 0; r < ROWS - 1; r++) board[r] = board[r + 1].clone();
+            board[ROWS - 1] = new int[COLS];
+            for (int c = 0; c < COLS; c++)
+                if (c != hole) board[ROWS - 1][c] = garbageColor;
+        }
+    }
+
+    // 공격 라인 가져오기 후 초기화
+    public int getAndResetAttack() {
+        int atk = pendingAttack;
+        pendingAttack = 0;
+        return atk;
+    }
+
+    // 보드 직렬화 (네트워크 전송용)
+    public String serializeBoard() {
+        StringBuilder sb = new StringBuilder();
+        for (int r = 0; r < ROWS; r++)
+            for (int c = 0; c < COLS; c++) {
+                int color = board[r][c];
+                if (color == 0) { sb.append('0'); continue; }
+                int idx = 8; // 가비지
+                for (int i = 0; i < TetrisBlock.COLORS.length; i++)
+                    if (TetrisBlock.COLORS[i] == color) { idx = i + 1; break; }
+                sb.append(idx);
+            }
+        return sb.toString();
+    }
+
     // 게임 속도 (ms) - 레벨 높을수록 빨라짐
     public int getSpeed() {
         return Math.max(100, 800 - (level - 1) * 70);
@@ -197,7 +236,7 @@ public class TetrisBoard {
     public void restart() {
         board = new int[ROWS][COLS];
         score = 0; level = 1; linesCleared = 0; gameOver = false; paused = false;
-        heldBlock = null; canHold = true;
+        heldBlock = null; canHold = true; pendingAttack = 0;
         nextBlock = new TetrisBlock(TetrisBlock.randomType());
         spawnBlock();
     }
