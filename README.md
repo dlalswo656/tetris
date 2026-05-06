@@ -1,4 +1,4 @@
-# 보고서 [tetris_Portfolio_report.docx](https://github.com/user-attachments/files/27428559/tetris_Portfolio_report.docx)
+# 보고서 [Tetris Game_Portfolio_report.docx](https://github.com/user-attachments/files/27428615/Tetris.Game_Portfolio_report.docx)
 
 # Tetris Game Portfolio 20260505 완성
 
